@@ -1,13 +1,16 @@
-import React, { useState ,useContext,useEffect} from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
+import { RxEyeOpen } from "react-icons/rx";
+import { RxEyeClosed } from "react-icons/rx";
 
 const Login = () => {
-  const {backendUrl,token,setToken}= useContext(AppContext);
+  const { backendUrl, token, setToken } = useContext(AppContext);
   const navigate = useNavigate();
   const [state, setState] = useState("Sign Up");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,42 +18,43 @@ const Login = () => {
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     try {
-       if(state === "Sign Up"){
-        const {data}=await axios.post(backendUrl + '/api/user/register', {name,email,password})
-        if(data.success){
-          localStorage.setItem('token',data.token)
-          setToken(data.token)
-          toast.success(data.message)
+      if (state === "Sign Up") {
+        const { data } = await axios.post(backendUrl + "/api/user/register", {
+          name,
+          email,
+          password,
+        });
+        if (data.success) {
+          localStorage.setItem("token", data.token);
+          setToken(data.token);
+          toast.success(data.message);
+        } else {
+          toast.error(data.message);
         }
-        else{
-          toast.error(data.message)
+      } else {
+        const { data } = await axios.post(backendUrl + "/api/user/login", {
+          email,
+          password,
+        });
+        console.log("login data", data);
+        if (data.success) {
+          localStorage.setItem("token", data.token);
+          setToken(data.token);
+          toast.success(data.message);
+        } else {
+          toast.error(data.message);
         }
-      
-    }
-    else{
-      const {data}=await axios.post(backendUrl + '/api/user/login', {email,password})
-      console.log("login data",data)
-      if(data.success){
-        localStorage.setItem('token',data.token)
-        setToken(data.token)
-        toast.success(data.message)
       }
-      else{
-        toast.error(data.message)
-      }
-    }
-     } catch (error) {
-      toast.error(error.message)  
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
-    useEffect(()=>{
-      if(token){
-        navigate('/')
-      }
-    },[token])
-
-
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [token]);
 
   return (
     <form onSubmit={onSubmitHandler} className="min-h-[80vh] flex items-center">
@@ -88,15 +92,33 @@ const Login = () => {
 
         <div className="w-full">
           <p>Password</p>
-          <input
-            className="border border-zinc-300 rounded w-full p-2 mt-1"
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            required
-          />
+          <div className="relative">
+            <input
+              className="border border-zinc-300 rounded w-full p-2 mt-1"
+              type={showPassword ? "text" : "password"}
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              required
+            />
+            <button
+              type="button"
+              className="absolute top-[55%] right-2 transform -translate-y-1/2 text-gray-700 hover:text-gray-900 focus:outline-none cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-pressed={showPassword}
+            >
+              {showPassword ? (
+                <RxEyeClosed size={14} />
+              ) : (
+                <RxEyeOpen size={14} />
+              )}
+            </button>
+          </div>
         </div>
-        <button type="submit" className="bg-primary text-white w-full py-2 rounded-md text-base">
+        <button
+          type="submit"
+          className="bg-primary text-white w-full py-2 rounded-md text-base"
+        >
           {state === "Sign Up" ? "Create Account" : "Login"}
         </button>
 
@@ -112,7 +134,7 @@ const Login = () => {
           </p>
         ) : (
           <p>
-            Create an new account?{" "}
+            Create an new account?
             <span
               onClick={() => setState("Sign Up")}
               className="text-primary underline cursor-pointer"

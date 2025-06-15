@@ -77,12 +77,20 @@ const Navbar = () => {
               </div>
             </div>
           ) : (
-            <button
-              onClick={() => navigate("/login")}
-              className="bg-primary text-white px-8 py-3 rounded-full font-light  m-auto hidden md:block cursor-pointer"
-            >
-              Create account
-            </button>
+            <>
+              <button
+                onClick={() => navigate("/login")}
+                className="bg-primary text-white px-4 py-2 rounded-full font-light block md:hidden"
+              >
+                Login
+              </button>
+              <button
+                onClick={() => navigate("/login")}
+                className="bg-primary text-white px-8 py-3 rounded-full font-light  m-auto hidden md:block cursor-pointer"
+              >
+                Create account
+              </button>
+            </>
           )}
           <img
             onClick={() => setShowMenu(!showMenu)}

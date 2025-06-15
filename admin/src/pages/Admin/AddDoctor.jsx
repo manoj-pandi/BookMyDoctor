@@ -3,6 +3,8 @@ import { assets } from "../../assets/assets_admin/assets";
 import { AdminContext } from "../../context/Context";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { RxEyeOpen } from "react-icons/rx";
+import { RxEyeClosed } from "react-icons/rx";
 
 const AddDoctor = () => {
   const [docImg, setDocImg] = useState(false);
@@ -17,6 +19,7 @@ const AddDoctor = () => {
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { backendUrl, aToken } = useContext(AdminContext);
 
@@ -56,7 +59,6 @@ const AddDoctor = () => {
         }
       );
       if (data.success) {
-
         toast.success(data.message);
         setDocImg(false);
         setDocName("");
@@ -75,8 +77,7 @@ const AddDoctor = () => {
       }
     } catch (error) {
       console.log("error", error);
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -136,16 +137,32 @@ const AddDoctor = () => {
             </div>
 
             {/* Password */}
-            <div className="flex-1 flex flex-col gap-1">
-              <p>Doctor Password</p>
-              <input
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-                className="border rounded px-3 py-2"
-                type="password"
-                placeholder="Password"
-                required
-              />
+            <div className="flex-1 flex flex-col gap-2">
+              <label
+                htmlFor="doctor-password"
+                className="font-medium text-gray-700"
+              >
+                Doctor Password
+              </label>
+              <div className="relative">
+                <input
+                  id="doctor-password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                  className="border rounded-lg px-4 py-2 w-full pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 "
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 hover:text-gray-900 focus:outline-none cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <RxEyeClosed /> : <RxEyeOpen />}
+                </button>
+              </div>
             </div>
 
             {/* Experience */}
@@ -260,7 +277,7 @@ const AddDoctor = () => {
           type="submit"
           className="bg-primary px-10 py-3 mt-4 text-white rounded-full cursor-pointer"
         >
-          {isLoading ? "Adding..." : "Add Doctor" }
+          {isLoading ? "Adding..." : "Add Doctor"}
         </button>
       </div>
     </form>

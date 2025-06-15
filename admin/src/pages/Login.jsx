@@ -3,6 +3,8 @@ import React, { useState, useContext } from "react";
 import { AdminContext, DoctorContext } from "../context/Context";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { RxEyeOpen } from "react-icons/rx";
+import { RxEyeClosed } from "react-icons/rx";
 
 const Login = () => {
   const [state, setState] = useState("Admin");
@@ -10,6 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const { setAToken, backendUrl } = useContext(AdminContext);
   const { setDToken } = useContext(DoctorContext);
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -67,14 +70,36 @@ const Login = () => {
             />
           </div>
           <div className="w-full">
-            <p>Password</p>
-            <input
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              className="border border-[#DADADA] rounded w-full p-2 mt-1"
-              type="password"
-              required
-            />
+            <label
+              htmlFor="password-input"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Password
+            </label>
+            <div className="relative">
+              <input
+                id="password-input"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                className="border border-[#DADADA] rounded-md w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                required
+              />
+              <button
+                type="button"
+                className="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-700 hover:text-gray-900 focus:outline-none cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-pressed={showPassword}
+              >
+                {showPassword ? (
+                  <RxEyeClosed size={14} />
+                ) : (
+                  <RxEyeOpen size={14} />
+                )}
+              </button>
+            </div>
           </div>
           <button className="bg-primary text-white w-full py-2 rounded-md text-base cursor-pointer">
             Login
