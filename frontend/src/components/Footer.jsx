@@ -40,7 +40,7 @@ const Footer = () => {
       <div>
         <hr />
         <p className="py-5 text-sm text-center">
-          &copy; {new Date().getFullYear()} Prescripto - All Rights Reserved.
+          &copy; {new Date().getFullYear()} BookMyDoctor - All Rights Reserved.
         </p>
       </div>
     </div>
