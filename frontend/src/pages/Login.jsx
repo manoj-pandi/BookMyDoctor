@@ -1,63 +1,70 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { RxEyeOpen } from "react-icons/rx";
 import { RxEyeClosed } from "react-icons/rx";
+import { useFormik } from "formik";
+import { signupSchema, loginSchema } from "../validation/validation";
 
 const Login = () => {
-  const { backendUrl, token, setToken } = useContext(AppContext);
+  const { backendUrl, setToken } = useContext(AppContext);
   const navigate = useNavigate();
   const [state, setState] = useState("Sign Up");
   const [showPassword, setShowPassword] = useState(false);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const onSubmitHandler = async (event) => {
-    event.preventDefault();
-    try {
-      if (state === "Sign Up") {
-        const { data } = await axios.post(backendUrl + "/api/user/register", {
-          name,
-          email,
-          password,
-        });
-        if (data.success) {
-          localStorage.setItem("token", data.token);
-          setToken(data.token);
-          toast.success(data.message);
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+    validationSchema: state === "Sign Up" ? signupSchema : loginSchema,
+    onSubmit: async (values) => {
+      try {
+        if (state === "Sign Up") {
+          const { name, email, password } = values;
+          const { data } = await axios.post(backendUrl + "/api/user/register", {
+            name,
+            email,
+            password,
+          });
+          if (data.success) {
+            localStorage.setItem("token", data.token);
+            setToken(data.token);
+            toast.success(data.message);
+            navigate("/");
+          } else {
+            toast.error(data.message);
+          }
         } else {
-          toast.error(data.message);
+          const { email, password } = values;
+          const { data } = await axios.post(backendUrl + "/api/user/login", {
+            email,
+            password,
+          });
+          console.log("login data", data);
+          if (data.success) {
+            localStorage.setItem("token", data.token);
+            setToken(data.token);
+            toast.success(data.message);
+            navigate("/");
+          } else {
+            toast.error(data.message);
+          }
         }
-      } else {
-        const { data } = await axios.post(backendUrl + "/api/user/login", {
-          email,
-          password,
-        });
-        console.log("login data", data);
-        if (data.success) {
-          localStorage.setItem("token", data.token);
-          setToken(data.token);
-          toast.success(data.message);
-        } else {
-          toast.error(data.message);
-        }
+      } catch (error) {
+        toast.error(error.message);
       }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-
-  useEffect(() => {
-    if (token) {
-      navigate("/");
-    }
-  }, [token]);
+    },
+  });
 
   return (
-    <form onSubmit={onSubmitHandler} className="min-h-[80vh] flex items-center">
+    <form
+      onSubmit={formik.handleSubmit}
+      className="min-h-[80vh] flex items-center"
+    >
       <div className="flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96  rounded-xl text-zinc-600 text-sm shadow-lg border-0">
         <p className="text-2xl font-semibold">
           {state === "Sign Up" ? "Create Account" : "Login"}
@@ -72,11 +79,16 @@ const Login = () => {
             <input
               className="border border-zinc-300 rounded w-full p-2 mt-1"
               type="text"
-              onChange={(e) => setName(e.target.value)}
-              value={name}
-              required
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.name}
+              name="name"
+              placeholder="Full Name"
             />
           </div>
+        )}
+        {formik.errors.name && formik.touched.name && (
+          <p className="text-red-600">{formik.errors.name}</p>
         )}
 
         <div className="w-full">
@@ -84,11 +96,16 @@ const Login = () => {
           <input
             className="border border-zinc-300 rounded w-full p-2 mt-1"
             type="email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            required
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.email}
+            name="email"
+            placeholder="Enter your email"
           />
         </div>
+        {formik.errors.email && formik.touched.email && (
+          <p className="text-red-600">{formik.errors.email}</p>
+        )}
 
         <div className="w-full">
           <p>Password</p>
@@ -96,9 +113,11 @@ const Login = () => {
             <input
               className="border border-zinc-300 rounded w-full p-2 mt-1"
               type={showPassword ? "text" : "password"}
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              required
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+              name="password"
+              placeholder="Enter your password"
             />
             <button
               type="button"
@@ -114,10 +133,14 @@ const Login = () => {
               )}
             </button>
           </div>
+          {formik.errors.password && formik.touched.password && (
+            <p className="text-red-600">{formik.errors.password}</p>
+          )}
         </div>
         <button
           type="submit"
-          className="bg-primary text-white w-full py-2 rounded-md text-base"
+          disabled={formik.isSubmitting || !formik.isValid}
+          className="bg-primary text-white w-full py-2 rounded-md text-base disabled:cursor-not-allowed disabled:opacity-50"
         >
           {state === "Sign Up" ? "Create Account" : "Login"}
         </button>
@@ -126,7 +149,10 @@ const Login = () => {
           <p>
             Already have an account?{" "}
             <span
-              onClick={() => setState("Login")}
+              onClick={() => {
+                setState("Login");
+                formik.resetForm();
+              }}
               className="text-primary underline cursor-pointer"
             >
               Login here
@@ -136,7 +162,10 @@ const Login = () => {
           <p>
             Create an new account?
             <span
-              onClick={() => setState("Sign Up")}
+              onClick={() => {
+                setState("Sign Up");
+                formik.resetForm();
+              }}
               className="text-primary underline cursor-pointer"
             >
               click here
