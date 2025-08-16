@@ -140,7 +140,7 @@ const Login = () => {
         <button
           type="submit"
           disabled={formik.isSubmitting || !formik.isValid}
-          className="bg-primary text-white w-full py-2 rounded-md text-base disabled:cursor-not-allowed disabled:opacity-50"
+          className="bg-primary text-white w-full py-2 rounded-md text-base disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
         >
           {state === "Sign Up" ? "Create Account" : "Login"}
         </button>
