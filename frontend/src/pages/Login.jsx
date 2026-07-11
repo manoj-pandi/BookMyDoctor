@@ -7,6 +7,7 @@ import { RxEyeOpen } from "react-icons/rx";
 import { RxEyeClosed } from "react-icons/rx";
 import { useFormik } from "formik";
 import { signupSchema, loginSchema } from "../validation/validation";
+import Seo from "../components/Seo";
 
 const Login = () => {
   const { backendUrl, setToken } = useContext(AppContext);
@@ -65,6 +66,12 @@ const Login = () => {
       onSubmit={formik.handleSubmit}
       className="min-h-[80vh] flex items-center"
     >
+      <Seo
+        title={state === "Sign Up" ? "Create Account" : "Login"}
+        description="Log in or create a BookMyDoctor account to book doctor appointments online."
+        path="/login"
+        noindex
+      />
       <div className="flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96  rounded-xl text-zinc-600 text-sm shadow-lg border-0">
         <p className="text-2xl font-semibold">
           {state === "Sign Up" ? "Create Account" : "Login"}

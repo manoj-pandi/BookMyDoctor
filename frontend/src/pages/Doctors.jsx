@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import Seo from "../components/Seo";
 
 const Doctors = () => {
   const { speciality } = useParams();
@@ -23,6 +24,15 @@ const Doctors = () => {
 
   return (
     <div>
+      <Seo
+        title={speciality ? `${speciality} Doctors` : "All Doctors"}
+        description={
+          speciality
+            ? `Book an appointment with top ${speciality} doctors near you on BookMyDoctor.`
+            : "Browse verified doctors across all specialities and book an appointment online with BookMyDoctor."
+        }
+        path={speciality ? `/doctors/${speciality}` : "/doctors"}
+      />
       <p className="text-gray-600">Browse through the doctors specialist.</p>
       <div className="flex flex-col sm:flex-row items-start gap-5 mt-5">
         <button

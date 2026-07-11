@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /login
+Disallow: /my-profile
+Disallow: /my-appointments
+
+Sitemap: https://book-my-doctor-one.vercel.app/sitemap.xml

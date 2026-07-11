@@ -1,9 +1,15 @@
 import React from "react";
 import { assets } from "../assets/assets_frontend/assets";
+import Seo from "../components/Seo";
 
 const About = () => {
   return (
     <div>
+      <Seo
+        title="About Us"
+        description="Learn about BookMyDoctor's mission to make booking doctor appointments simple, fast, and reliable for patients and healthcare providers."
+        path="/about"
+      />
       <div className="text-center text-2xl pt-10 text-gray-500">
         <p>
           ABOUT <span className="text-gray-700 font-medium">US</span>
@@ -14,7 +20,7 @@ const About = () => {
         <img
           className="w-full md:max-w-[360px] "
           src={assets.about_image}
-          alt=""
+          alt="About BookMyDoctor"
         />
         <div className="flex flex-col justify-center gap-6 md:w-2/4 text-sm text-gray-600">
           <p>

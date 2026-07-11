@@ -1,9 +1,15 @@
 import React from "react";
 import { assets } from "../assets/assets_frontend/assets";
+import Seo from "../components/Seo";
 
 const Contact = () => {
   return (
     <div>
+      <Seo
+        title="Contact Us"
+        description="Get in touch with BookMyDoctor for support, partnership, or general inquiries about booking doctor appointments online."
+        path="/contact"
+      />
       <div className="text-center text-2xl pt-10 text-gray-500">
         {" "}
         <p>

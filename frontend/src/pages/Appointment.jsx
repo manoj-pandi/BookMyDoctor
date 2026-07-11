@@ -5,6 +5,7 @@ import { assets } from "../assets/assets_frontend/assets";
 import RelatedDoctors from "../components/RelatedDoctors";
 import { toast } from "react-toastify";
 import axios from "axios";
+import Seo from "../components/Seo";
 const Appointment = () => {
   const { docId } = useParams();
   const { doctors, rupeeSymbol, backendUrl, token, getDoctorsData } =
@@ -136,6 +137,15 @@ const Appointment = () => {
   }, [docSlots]);
   return (
     <div>
+      <Seo
+        title={docInfo.name ? `Book Appointment with ${docInfo.name}` : "Book Appointment"}
+        description={
+          docInfo.name
+            ? `Book an online appointment with ${docInfo.name}${docInfo.speciality ? `, ${docInfo.speciality}` : ""} on BookMyDoctor. Check availability and pay securely online.`
+            : "Book an online doctor appointment on BookMyDoctor."
+        }
+        path={`/appointment/${docId}`}
+      />
       {/* --------Doctor Details */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div>

@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Seo from "../components/Seo";
 
 const MyAppointments = () => {
   const { backendUrl, token, getDoctorsData } = useContext(AppContext);
@@ -129,6 +130,12 @@ const MyAppointments = () => {
 
   return (
     <div>
+      <Seo
+        title="My Appointments"
+        description="View and manage your booked doctor appointments on BookMyDoctor."
+        path="/my-appointments"
+        noindex
+      />
       <p className="pb-3 mt-12 font-medium text-zinc-700 border-b">
         My Appointments
       </p>
