@@ -160,7 +160,7 @@ BookMyDoctor/
 
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/<your-username>/BookMyDoctor.git
+git clone https://github.com/manoj-pandi/BookMyDoctor.git
 cd BookMyDoctor
 ```
 
